@@ -1,4 +1,4 @@
-package com.balance.balancegame.Screens;
+package com.balance.balancegame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,9 +10,9 @@ import java.util.HashMap;
  */
 public class Content {
 
-    public HashMap<String, Texture> textures;
+    private HashMap<String, Texture> textures;
 
-    private Content(){
+    public Content(){
         textures = new HashMap<String, Texture>();
 }
 
