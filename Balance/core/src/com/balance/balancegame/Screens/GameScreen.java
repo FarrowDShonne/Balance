@@ -4,17 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.balance.balancegame.Constants;
 import com.balance.balancegame.Content;
 import com.balance.balancegame.Game;
+import com.balance.balancegame.Objects.Scale;
 
-/**
- * Created by Registered User on 6/22/2016.
- */
+
 public class GameScreen implements Screen {
 
     private Game myGame;
@@ -23,27 +23,37 @@ public class GameScreen implements Screen {
     }
     private Viewport viewport;
     private OrthographicCamera camera;
-    private static Content content;
+    private World world;
+    private Box2DDebugRenderer box2DDebugRenderer;
+
+    private Scale scale;
 
     @Override
     public void show() {
+        world = new World(new Vector2(0,-9.81f), true);
         camera = new OrthographicCamera();
         viewport = new StretchViewport(Constants.WIDTH/100, Constants.HEIGHT/100, camera);
 
+        box2DDebugRenderer = new Box2DDebugRenderer();
+
+        scale = new Scale(world);
 
 
-        content = new Content();
-        content.loadTexture("badlogic.jpg", "bad");
+
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(0,0,0,0);
+
+        world.step(1/45f, 6, 2);
+        box2DDebugRenderer.render(world, camera.combined);
+
         myGame.batch.setProjectionMatrix(camera.combined);
         myGame.batch.begin();
-        myGame.batch.draw(content.getTexture("bad"), 0,0,4,3);
         myGame.batch.end();
+
     }
 
     @Override
@@ -51,6 +61,8 @@ public class GameScreen implements Screen {
 
         viewport.update(width, height);
         viewport.apply(true);
+
+
     }
 
     @Override
