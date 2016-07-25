@@ -8,8 +8,8 @@ import com.balance.balancegame.Game;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.height = Constants.HEIGHT;
-		config.width = Constants.WIDTH;
+		config.height = 800;
+		config.width = 480;
 		config.resizable = false;
 		new LwjglApplication(new Game(), config);
 	}

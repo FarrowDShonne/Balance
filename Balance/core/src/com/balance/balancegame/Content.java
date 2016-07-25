@@ -12,6 +12,8 @@ public class Content {
 
     private HashMap<String, Texture> textures;
 
+    public Texture box = new Texture(Gdx.files.internal("box.jpg"));
+
     public Content(){
         textures = new HashMap<String, Texture>();
 }
