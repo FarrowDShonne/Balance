@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -34,13 +35,14 @@ public class Scale {
     public Sprite HSprite, VSprite;
 
     public Scale(World world){
-        Scale.horizontalScaleBody = world.createBody(createHorizontalScaleBody());
-        Scale.horizontalScaleBody.createFixture(createHorizontalScaleFixture());
+        horizontalScaleBody = world.createBody(createHorizontalScaleBody());
+        horizontalScaleBody.createFixture(createHorizontalScaleFixture());
+        horizontalScaleBody.getPosition().setAngle(0);
 
-        Scale.verticalScaleBody = world.createBody(createVerticalScaleBody());
-        Scale.verticalScaleBody.createFixture(createVerticalScaleFixture());
-        HSprite = new Sprite(GameScreen.content.getTexture("box"));
-        VSprite = new Sprite(GameScreen.content.getTexture("box"));
+        verticalScaleBody = world.createBody(createVerticalScaleBody());
+        verticalScaleBody.createFixture(createVerticalScaleFixture());
+        HSprite = new Sprite(GameScreen.content.getGameTexture("scalebackground"));
+        VSprite = new Sprite(GameScreen.content.getGameTexture("scalebackground"));
     }
      public BodyDef createHorizontalScaleBody(){
          BodyDef bodyDef = new BodyDef();
@@ -55,6 +57,8 @@ public class Scale {
     public FixtureDef createHorizontalScaleFixture(){
         PolygonShape rectangle = new PolygonShape();
         rectangle.setAsBox(HorizontalWidth, HorizontalHeight);
+
+
 
 
         FixtureDef fixtureDef = new FixtureDef();

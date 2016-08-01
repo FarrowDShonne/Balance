@@ -11,11 +11,11 @@ import java.util.HashMap;
 public class Content {
 
     private HashMap<String, Texture> textures;
-
-    public Texture box = new Texture(Gdx.files.internal("box.jpg"));
+    private HashMap<String, Texture> Gametextures;
 
     public Content(){
         textures = new HashMap<String, Texture>();
+        Gametextures = new HashMap<String, Texture>();
 }
 
     public void loadTexture(String path, String key) {
@@ -29,6 +29,22 @@ public class Content {
         Texture tex = textures.get(key);
         if(tex != null) {
             textures.remove(key);
+            tex.dispose();
+        }
+    }
+
+
+    public void loadGameTexture(String path, String key) {
+        Texture tex = new Texture(Gdx.files.internal(path));
+        Gametextures.put(key, tex);
+    }
+    public Texture getGameTexture(String key) {
+        return Gametextures.get(key);
+    }
+    public void removeGameTexture(String key) {
+        Texture tex = Gametextures.get(key);
+        if(tex != null) {
+            Gametextures.remove(key);
             tex.dispose();
         }
     }

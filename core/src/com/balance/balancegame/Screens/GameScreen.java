@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -43,7 +44,9 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false,WIDTH/PPM,HEIGHT/PPM);
         content = new Content();
-        content.loadTexture("box.jpg", "box");
+        content.loadGameTexture("box.jpg","box");
+        content.loadGameTexture("background.jpg", "background");
+        content.loadGameTexture("scalebackground.jpg", "scalebackground");
 
 
 
@@ -65,15 +68,16 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0,0,0,0);
         camera.update();
         world.step(1/45f, 6, 2);
-
         scale.update();
-        box2DDebugRenderer.render(world, camera.combined);
+
         myGame.batch.setProjectionMatrix(camera.combined);
         myGame.batch.begin();
+        myGame.batch.draw(content.getGameTexture("background"), 0,0,camera.viewportWidth, camera.viewportHeight);
         scale.renderScales(delta, myGame.batch);
-
+        generatedObjects.renderGeneratedObjects(delta, myGame.batch);
 
         myGame.batch.end();
+       box2DDebugRenderer.render(world, camera.combined);
 
 
         if(Gdx.input.justTouched()){

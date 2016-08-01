@@ -2,17 +2,24 @@ package com.balance.balancegame.Objects;
 
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.balance.balancegame.Constants;
-import com.balance.balancegame.Content;
 import com.balance.balancegame.Screens.GameScreen;
 
+
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.scene.shape.TriangleMesh;
@@ -26,9 +33,12 @@ public class GeneratedObjects {
     private World world;
     private float BlocksHeight = (float) (HEIGHT*.025)/PPM;
     private float BlocksWidth = (float) (WIDTH*.04)/PPM;
+    private static ArrayList<Fixture> Bodies = new ArrayList<Fixture>();
+    public TextureRegion standardBlockImage, twentyFiveDensity, fiftyDensity, seventyDiveDensity, hundredDensity;
 
     public GeneratedObjects(World world){
         this.world = world;
+        standardBlockImage = new TextureRegion(GameScreen.content.getGameTexture("box"));
     }
 
 
@@ -48,7 +58,13 @@ public class GeneratedObjects {
         fixtureDef.friction = 1;
         fixtureDef.filter.categoryBits = Constants.CLICKBOX;
 
-        world.createBody(bodyDef).createFixture(fixtureDef);
+        Bodies.add(world.createBody(bodyDef).createFixture(fixtureDef));
+
+        box.dispose();
+
+
+
+
     }
 
     public void boxGeneratedObjects(){
@@ -71,11 +87,12 @@ public class GeneratedObjects {
         fixtureDef.friction = 1;
         fixtureDef.filter.categoryBits = Constants.GBOX;
 
-        world.createBody(bodyDef).createFixture(fixtureDef);
+        Bodies.add(world.createBody(bodyDef).createFixture(fixtureDef));
         box.dispose();
     }
 
     public void circleGeneratedObjects(){
+        Body body;
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set((new Random().nextInt((int)WIDTH))/PPM,
                 (new Random().nextInt((int)HEIGHT/2)+HEIGHT)/PPM);
@@ -98,8 +115,40 @@ public class GeneratedObjects {
         fixtureDef.filter.categoryBits = Constants.GCIRCLE;
 
 
-        world.createBody(bodyDef).createFixture(fixtureDef);
+        Bodies.add(world.createBody(bodyDef).createFixture(fixtureDef));
         circle.dispose();
+
+
+    }
+
+    public void renderGeneratedObjects(float delta, SpriteBatch batch){
+        for(int render = 0; render < Bodies.size(); render++){
+            switch (Bodies.get(render).getFilterData().categoryBits){
+                case Constants.CLICKBOX:
+                    batch.draw(standardBlockImage, Bodies.get(render).getBody().getPosition().x - BlocksWidth,
+                            Bodies.get(render).getBody().getPosition().y - BlocksHeight,
+                            BlocksWidth, BlocksHeight,
+                            BlocksWidth*2, BlocksHeight*2,1, 1,
+                            Bodies.get(render).getBody().getAngle()* MathUtils.radiansToDegrees, false
+                    );
+                    break;
+                case Constants.GCIRCLE:
+                    break;
+                case Constants.GBOX:
+                    switch((int) Bodies.get(render).getDensity()){
+
+                    }
+                    break;
+                default:
+
+            }
+
+        }
+
+//        HSprite.setSize(HorizontalWidth*2, HorizontalHeight*2);
+//        HSprite.setPosition(horizontalScaleBody.getPosition().x - HorizontalWidth, horizontalScaleBody.getPosition().y-HorizontalHeight);
+//        HSprite.setOrigin(HorizontalWidth, HorizontalHeight);
+//        HSprite.setRotation(horizontalScaleBody.getAngle()* MathUtils.radiansToDegrees);
     }
 
     public int GenerateDensity(){
